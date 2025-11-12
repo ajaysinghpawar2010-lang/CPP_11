@@ -1,0 +1,45 @@
+/*
+When deleting a derived object through a base class pointer:
+
+If the base class destructor is not virtual, only the base destructor runs.
+If the base class destructor is virtual, both base and derived destructors run properly.
+
+
+*/
+
+#include <iostream>
+
+
+class A{
+    public:
+    A(){
+        std::cout << "A" << std::endl;
+    }
+    virtual ~A(){
+        std::cout << "~A" << std::endl;
+    }
+    
+    A(const A&a){
+        
+    }
+};
+
+class B: public A{
+    public:
+    B(){
+        std::cout << "B" << std::endl;
+    }
+    ~B(){
+        std::cout << "~B" << std::endl;
+    }
+    
+};
+
+int main(){
+    
+    A * a = new B();  // -> Call A B B A  if virtual keyworkd is missing then 
+    delete a;
+    
+    
+    
+}

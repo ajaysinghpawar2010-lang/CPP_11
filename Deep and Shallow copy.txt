@@ -1,0 +1,67 @@
+/*
+
+Shallow copy and Deep copy
+
+In shallow copy we assign one object to other then the instance is
+shared while in deep copy new memory is allocated and independently
+life cyle is managed.
+
+*/
+#include <iostream>
+
+class Shallow {
+    int* x;
+public:
+    Shallow() {
+        x = new int(10); // allocate memory
+    }
+
+    ~Shallow() {
+        delete x; // free memory
+    }
+
+    // Shallow copy constructor
+    Shallow(const Shallow& s) {
+        x = s.x; // shallow copy: both objects share the same memory
+    }
+
+    void printAddress() const {
+        std::cout << "Object address: " << this << ", x address: " << x << ", x value: " << *x << std::endl;
+    }
+};
+
+class Deep{
+    int *x;
+    public:
+    Deep(){
+        x = new int(20);
+    }
+    ~Deep(){
+        delete x;
+    }
+    Deep(const Deep &d){
+        x=new int (*d.x);
+        // deep copy 
+    }
+    
+    void printAddress() const {
+        std::cout << "Object address: " << this << ", x address: " << x << ", x value: " << *x << std::endl;
+    }
+};
+
+
+int main() {
+    Shallow s;
+    Shallow s1(s); // shallow copy
+
+    s.printAddress();
+    s1.printAddress(); // same x address as s
+    // double free is expeirinced here issue
+    
+    Deep d;
+    Deep d1(d);
+    d.printAddress();
+    d1.printAddress(); 
+    
+    return 0;
+}

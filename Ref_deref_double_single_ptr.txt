@@ -1,0 +1,35 @@
+#include <iostream>
+
+
+// cpp  semaphore
+
+
+int main(){
+    int a = 20;
+    int *b = &a;
+    std::cout << a << std::endl;
+    std::cout << *b << std::endl;
+    *b = 40;
+    
+    std::cout << a << &a << std::endl;
+    std::cout << *b << b << std::endl;
+ 
+    int x = 10;
+    int *y = &x;
+    int ** z = &y ;
+    std::cout << x << *y << **z << std::endl;
+    **z = 15;
+    
+    
+    int * dereference = &(**z);
+    
+    std::cout << x << *dereference << **z << std::endl;
+    
+    *dereference = 25;
+    
+    int dereference_1 = *dereference;
+    
+    std::cout << dereference_1 << std::endl;
+    
+    return 0;
+}

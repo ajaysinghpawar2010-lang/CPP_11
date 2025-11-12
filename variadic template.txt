@@ -1,0 +1,36 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+class Logger {
+public:
+    template<typename... Args>
+    void log(const Args&... args) {
+        std::ofstream file("log.txt", std::ios::app);
+        if (file.is_open()) {
+            (file << ... << args) << '\n'; // Fold expression (C++17)
+        }
+    }
+};
+
+
+int main() {
+    Logger logger;
+
+    logger.log("User ID: ", 101, ", Status: ", "Active");
+    logger.log("Temperature: ", 36.5, "°C");
+    logger.log("Error Code: ", 404, ", Message: ", "Not Found");
+}
+
+/*
+
+Accepts any number of arguments of any type.
+Automatically writes them to a log file.
+No need to manually format strings.
+Works well in real applications like:
+
+Server logs
+Debugging tools
+Audit trails
+
+*/

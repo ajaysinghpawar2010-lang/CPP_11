@@ -1,0 +1,50 @@
+#include <iostream>
+
+
+
+class A{
+    public :
+    void f(){
+        std::cout << "A" << std::endl;
+    }
+};
+
+
+class B : virtual public A {
+        public :
+        void f(){
+        std::cout << "B" << std::endl;
+    }
+};
+
+class C : virtual public A {
+public :
+        void f(){
+        std::cout << "C" << std::endl;
+    }
+};
+
+
+class D : public C, public B {
+public :
+        void f(){
+        std::cout << "D" << std::endl;
+    }
+};
+
+
+
+int main()
+{
+    
+     D a;
+     a.f();
+    
+
+    a.B::f(); // Calls B's version
+    a.C::f(); // Calls C's version
+    a.A::f(); // Calls A's version
+
+}
+
+

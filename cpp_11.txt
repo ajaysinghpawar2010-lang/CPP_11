@@ -1,0 +1,213 @@
+/*
+CPP 11 concepts
+   - auto self deduction type
+   - Range based loops
+   - Lambda expressions
+       auto x = [](){
+       };
+
+
+*/
+
+#include <iostream>
+#include <memory>
+#include <fstream>
+#include <string>
+#include <thread>
+#include <unistd.h>
+#include <mutex>
+#include <type_traits>
+
+auto m = [] (int x) {
+	return x + x;
+};
+
+class A {
+    int x;
+public :
+	A() {
+		std::cout << "constructor" << std::endl;
+	}
+	~A() {
+		std::cout << "destructor" << std::endl;
+	}
+	
+	A(const A *a){
+	    std::cout << "Move called" << std::endl;
+	    x = a->x;
+	}
+	A(int x){
+	    x =x;
+	}
+};
+
+class Logger {
+public:
+    template<typename... Args>
+    void log(const Args&... args) {
+        std::ofstream file("log.txt", std::ios::app);
+        if (file.is_open()) {
+            (file << ... << args) << '\n'; // Fold expression (C++17)
+        }
+    }
+};
+
+std::mutex mtx;
+
+void my_function(int x) {
+    std::lock_guard <std::mutex> lock (mtx);
+    //mtx.lock();
+    std::cout << "Hello from a new thread!" << x << std::endl;
+    //mtx.unlock();
+}
+
+constexpr int compileTimeValue = 100;
+
+constexpr int multiply(int x, int y) {
+    return x * y;
+}
+
+int main() {
+// auto
+	auto x=10;
+	auto y=20.0;
+	auto z="string";
+	std::cout << "---------------range based loops---------------------" << std::endl;
+	int arr [5] = {1,2,3,4,5};
+	// initializer list
+	// int arr [5]  {1,2,3,4,5};
+
+// range based loops
+	for (int i:arr)
+		std::cout << i << std::endl;
+	std::cout << "---------------lambda expression---------------------" << std::endl;
+// Lambda expression
+	std::cout << m(8) << std::endl;
+
+	std::cout << "---------------smart pointers---------------------" << std::endl;
+// 	smart pointers
+	std::unique_ptr<A> ptr1(new A());
+	std::shared_ptr<A> ptr2(new A());
+	std::shared_ptr<A> ptr3 = ptr2;
+	std::unique_ptr<A> ptr4 = std::move(ptr1);
+    std::weak_ptr<A> ptr5 = ptr2;
+
+
+// nullptr type safe check 
+//C++11 introduced nullptr as a type-safe way to represent a null pointer constant, 
+//addressing issues with using 0 or NULL for this purpose.
+
+	std::cout << "---------------move semantics---------------------" << std::endl;
+    A * a = new A(10);
+    A * b = std::move(a);
+
+	std::cout << "---------------variadic templates---------------------" << std::endl;
+	
+    Logger logger;
+
+    logger.log("User ID: ", 101, ", Status: ", "Active");
+    logger.log("Temperature: ", 36.5, "°C");
+    logger.log("Error Code: ", 404, ", Message: ", "Not Found");
+
+
+	std::cout << "---------------thread---------------------" << std::endl;
+	
+/*
+std::mutex: Provides mutual exclusion, allowing only one thread at a time to access
+            a critical section of code.
+std::lock_guard and std::unique_lock: RAII wrappers for mutexes, ensuring proper locking
+                                      and unlocking.
+std::condition_variable: Allows threads to wait for a specific condition to be met 
+                         before proceeding.
+std::atomic: Provides atomic operations for fundamental data types, ensuring operations
+             are indivisible and thread-safe.
+*/	
+	
+    std::thread t (my_function,0);	
+    t.join();
+
+    std::thread t1 (my_function,1);	
+    std::thread t2 (my_function,2);	
+    std::thread t3 (my_function,3);
+    t1.join(); t2.join(); t3.join();
+
+// const expr 
+
+    // Using a constexpr variable
+    std::cout << "Compile-time value: " << compileTimeValue << std::endl;
+
+    // Using a constexpr function with compile-time arguments
+    // The result of multiply(5, 7) can be computed at compile-time.
+    constexpr int result = multiply(5, 7);
+    std::cout << "Compile-time multiplication result: " << result << std::endl;
+
+    // Using a constexpr function with a runtime argument.
+    // In this case, the function will be evaluated at runtime.
+    int runtimeInput = 3;
+    int runtimeResult = multiply(runtimeInput, 4);
+    std::cout << "Runtime multiplication result: " << runtimeResult << std::endl;
+
+// type traits
+/*
+These traits determine the fundamental category of a type.
+std::is_void: Checks if a type is void.
+std::is_integral: Checks if a type is an integral type (e.g., int, char, bool).
+std::is_floating_point: Checks if a type is a floating-point type (e.g., float, double).
+std::is_array: Checks if a type is an array type.
+std::is_pointer: Checks if a type is a pointer type.
+std::is_lvalue_reference: Checks if a type is an lvalue reference.
+std::is_rvalue_reference: Checks if a type is an rvalue reference.
+std::is_function: Checks if a type is a function type.
+std::is_class: Checks if a type is a class type.
+std::is_union: Checks if a type is a union type.
+std::is_enum: Checks if a type is an enumeration type.
+2. Type Property Traits:
+These traits query specific properties of types.
+std::is_const: Checks if a type is const-qualified.
+std::is_volatile: Checks if a type is volatile-qualified.
+std::is_signed: Checks if an integral type is signed.
+std::is_unsigned: Checks if an integral type is unsigned.
+std::is_pod: Checks if a type is a Plain Old Data (POD) type.
+std::is_empty: Checks if a class type is empty.
+std::is_polymorphic: Checks if a class type is polymorphic (has virtual functions).
+std::is_abstract: Checks if a class type is abstract.
+std::is_final: Checks if a class type is marked as final.
+std::is_default_constructible, std::is_copy_constructible, std::is_move_constructible: Check constructibility.
+std::is_copy_assignable, std::is_move_assignable: Check assignability.
+std::is_destructible: Checks destructibility.
+3. Type Relationship Traits:
+These traits examine relationships between types.
+std::is_same: Checks if two types are the same.
+std::is_base_of: Checks if one class is a base of another.
+std::is_convertible: Checks if one type can be converted to another.
+4. Type Transformation Traits:
+These traits modify types.
+std::remove_const, std::remove_volatile, std::remove_cv: Remove const and/or volatile qualifiers.
+std::add_const, std::add_volatile, std::add_cv: Add const and/or volatile qualifiers.
+std::remove_reference, std::add_lvalue_reference, std::add_rvalue_reference: Manipulate references.
+std::remove_pointer, std::add_pointer: Manipulate pointers.
+std::decay: Transforms a type to its "decayed" form (e.g., array to pointer, function to function pointer).
+std::make_signed, std::make_unsigned: Change the signedness of an integral type.
+*/
+    
+    std::cout << std::boolalpha; // Print booleans as true/false
+
+    // Type Category Trait
+    std::cout << "Is int an integral type? " << std::is_integral<int>::value << std::endl;
+
+    // Type Property Trait
+    std::cout << "Is const int const? " << std::is_const<const int>::value << std::endl;
+
+    // Type Relationship Trait
+    std::cout << "Are int and float the same? " << std::is_same<int, float>::value << std::endl;
+
+    // Type Transformation Trait
+    using non_const_int = std::remove_const<const int>::type;
+    std::cout << "Is non_const_int const? " << std::is_const<non_const_int>::value << std::endl;
+
+    
+	return 0;
+}
+
+
+

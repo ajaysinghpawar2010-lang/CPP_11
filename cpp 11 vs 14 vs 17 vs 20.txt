@@ -1,0 +1,56 @@
+C++11 – The Big Leap (2011)
+Introduced move semantics, concurrency, and modern syntax.
+
+Move semantics: std::move, rvalue references
+Smart pointers: std::unique_ptr, std::shared_ptr
+Lambda expressions
+Auto keyword
+Range-based for loops
+nullptr
+Variadic templates
+Thread support: std::thread, std::mutex
+Static assertions: static_assert
+Type traits: std::is_same, etc.
+Uniform initialization: {} syntax
+
+
+C++14 – Refinement (2014)
+Mostly fixes and enhancements to C++11.
+
+Generic lambdas: auto in lambda parameters
+Return type deduction: auto for functions
+std::make_unique
+Variable templates
+Relaxed constexpr: more complex constexpr functions
+Binary literals: 0b1010
+Digit separators: 1'000'000
+
+
+C++17 – Practical Improvements (2017)
+Focused on simplifying code and performance.
+
+Structured bindings: auto [x, y] = pair;
+If/switch with initializer: if (auto x = foo(); x > 0)
+Inline variables
+Fold expressions for variadic templates
+std::optional, std::variant, std::any
+std::string_view
+Parallel algorithms: std::sort(std::execution::par, ...)
+Filesystem library: std::filesystem
+constexpr if
+Template argument deduction for class templates
+
+
+C++20 – Modern Powerhouse (2020)
+A massive update with modules, coroutines, and concepts.
+
+Concepts: type constraints for templates
+Coroutines: co_await, co_yield, co_return
+Modules: alternative to headers
+Ranges library: views::filter, views::transform
+Calendar and time zones: std::chrono::year_month_day
+Expanded constexpr: even virtual functions
+consteval and constinit
+Three-way comparison: <=> (spaceship operator)
+Improved lambdas: lambdas in unevaluated contexts
+std::span: view over contiguous data

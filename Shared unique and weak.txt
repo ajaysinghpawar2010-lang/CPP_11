@@ -1,0 +1,81 @@
+/*
+
+Smart pointers in C++ are wrappers around raw pointers that help manage memory 
+automatically. They are part of the C++ Standard Library and are defined in the
+<memory> header. Smart pointers ensure that memory is properly released when it's
+no longer needed, helping to prevent memory leaks and dangling pointers.
+
+Types of Smart Pointers in C++
+
+
+std::unique_ptr
+
+Owns the object exclusively.
+Cannot be copied, only moved.
+Automatically deletes the object when it goes out of scope.
+
+
+std::shared_ptr
+
+Allows multiple smart pointers to share ownership of an object.
+The object is destroyed when the last shared_ptr owning it is destroyed.
+
+std::weak_ptr
+
+Works with shared_ptr to break circular references.
+Does not contribute to the reference count.
+Must be converted to shared_ptr before use.
+
+*/
+
+
+#include <iostream>
+#include <memory>
+
+class MyClass {
+public:
+    MyClass() { std::cout << "Constructor\n"; }
+    ~MyClass() { std::cout << "Destructor\n"; }
+    void greet() { std::cout << "Hello from MyClass\n"; }
+};
+
+
+int main() {
+    // unique ptr
+    std::unique_ptr<MyClass> ptr = std::make_unique<MyClass>();
+    ptr->greet();
+    std::unique_ptr<MyClass> ptr_move = std::move(ptr1);  // unique ptr ownership can be moved only
+    // No need to delete manually
+    
+//std::move was introduced to:
+
+//Enable move semantics
+//Improve performance
+//Avoid unnecessary copies
+//Make C++ more expressive and efficient
+
+    // shared ptr
+    std::shared_ptr<MyClass> ptr1 = std::make_shared<MyClass>();
+    std::shared_ptr<MyClass> ptr2 = ptr1; // shared ownership
+    std::cout << "Use count: " << ptr1.use_count() << std::endl;
+
+    
+    std::shared_ptr<MyClass> shared = std::make_shared<MyClass>();
+    std::weak_ptr<MyClass> weak = shared;
+
+    if (auto temp = weak.lock()) {
+        std::cout << "Object is still alive\n";
+    } else {
+        std::cout << "Object has been destroyed\n";
+    }
+
+//Benefits of Smart Pointers
+  //Automatic memory management.
+  //Exception safety.
+  //Prevents memory leaks and dangling pointers.
+  //Makes ownership semantics explicit.
+
+
+    return 0;
+}
+

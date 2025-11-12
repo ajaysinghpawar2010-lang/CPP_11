@@ -1,0 +1,48 @@
+/*
+
+Can a Derived Class Create a Base Class Object?
+The short answer is:
+No, a derived class cannot directly create a base class object—but
+it inherits from the base class and can call its constructor as part 
+of its own construction.
+
+
+*/
+
+#include <iostream>
+
+
+class A{
+    public:
+    A(){
+        std::cout << "A" << std::endl;
+    }
+    virtual ~A(){
+        std::cout << "~A" << std::endl;
+    }
+    
+};
+
+class B: public A{
+    A a;   // This is composition 
+    public:
+    B(){
+        std::cout << "B" << std::endl;
+    }
+    ~B(){
+        std::cout << "~B" << std::endl;
+    }
+    
+};
+
+int main(){
+    
+    A * a = new B();  // This works
+    B * b = new A();  // This will not work to make it work access baseclass from derived
+                      // we create a base class object in derived class and use it.
+                          
+    delete a;
+    
+    
+    
+}

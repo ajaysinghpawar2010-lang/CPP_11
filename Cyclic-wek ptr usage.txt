@@ -1,0 +1,30 @@
+#include <memory>
+#include <iostream>
+
+class B; // Forward declaration
+
+class A {
+public:
+    std::shared_ptr<B> b_ptr;
+    A() { std::cout << "A constructor\n"; }
+    ~A() { std::cout << "A destructor\n"; }
+};
+
+class B {
+public:
+    std::weak_ptr<A> a_ptr;  // make std::weak_ptr<A> a_ptr;  --> to std::shared_ptr<A> a_ptr;  for cyclic issue 
+    B() { std::cout << "B constructor\n"; }
+    ~B() { std::cout << "B destructor\n"; }
+};
+
+int main() {
+    {
+        std::shared_ptr<A> pa = std::make_shared<A>();
+        std::shared_ptr<B> pb = std::make_shared<B>();
+
+        pa->b_ptr = pb; // A now points to B
+        pb->a_ptr = pa; // B now points to A (creating the cycle)
+    } // pa and pb go out of scope here
+    std::cout << "End of main\n";
+    return 0;
+}

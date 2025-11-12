@@ -1,0 +1,53 @@
+#include <iostream>
+
+class A {
+public:
+    virtual void s() = 0; // pure virtual function
+};
+
+class B : public A {
+public:
+    void s() override {
+        std::cout << "Implementation of B called\n";
+    }
+    void onlyInB() {
+        std::cout << "Method only in B\n";
+    }
+};
+
+class C : public A {
+public:
+    void s() override {
+        std::cout << "Implementation of C called\n";
+    }
+    void onlyInC() {
+        std::cout << "Method only in C\n";
+    }
+};
+
+int main() {
+    A* a = new C(); // base pointer to derived object
+
+    // Try to cast to B
+    B* b = dynamic_cast<B*>(a);
+    if (b) {
+        std::cout << "Cast to B successful\n";
+        b->s();
+        b->onlyInB();
+    } else {
+        std::cout << "Cast to B failed\n";
+    }
+
+    // Try to cast to C
+    C* c = dynamic_cast<C*>(a);
+    if (c) {
+        std::cout << "Cast to C successful\n";
+        c->s();
+        c->onlyInC();
+    } else {
+        std::cout << "Cast to C failed\n";
+    }
+
+    delete a;
+    return 0;
+}
